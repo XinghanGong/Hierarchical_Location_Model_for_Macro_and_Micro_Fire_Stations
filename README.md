@@ -1,0 +1,2 @@
+# Hierarchical-Location-Model-for-Macro-and-Micro-Fire-Stations
+The repository records our code works in the paper "A Hierarchical Multi-Objective Programming Approach to Planning Locations for Macro and Micro Fire Stations"
