@@ -129,10 +129,4 @@ class MyProblem(ea.Problem):
         pop.CV = np.zeros((pop.sizes, 1))
         pop.CV[exIdx] = 1  # 把求得的违反约束程度矩阵赋值给种群pop的CV
 
-        # 罚函数方法: 不推荐，因为难以确定相关参量数值；
-        # alpha =0.2  # 惩罚缩放因子
-        # beta = 0.1  # 惩罚最小偏移量
-        # f1[exIdx] = f1[exIdx] + self.maxormins[0] * alpha * (np.max(f1) - np.min(f1) + beta)
-
-        # 自定义惩罚方法:
-        # f1[exIdx] = f1[exIdx]-0.05  #- np.min(f1)
+        # We do not use penalty function method becasue it is hard to set values for the relative parameeters;
