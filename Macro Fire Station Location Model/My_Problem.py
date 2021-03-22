@@ -39,7 +39,7 @@ class MyProblem(ea.Problem):
         Vars = pop.Phen  # Matrix of decision variables
 
         num_list = [x for x in range(239)]
-        rand_num = []  # rand_num 里的每个元素即是当前个体的建站方案
+        rand_num = []  
         for l in range(300):
             b = random.sample(num_list, 3)
             rand_num.append(b)
@@ -49,18 +49,22 @@ class MyProblem(ea.Problem):
                 Vars[i][rand_num[i][j]] = 1
         Vars = np.array(Vars)
 
-        """=======================构造目标函数f1=========================="""
+        """=======================Construct objective f1=========================="""
         excel_path_0 = r'/zengyp/Xinghan/Macro_Experience_Record/overlaprate30_p3_jianbiao/RiskValue_jainbiao.xls'
         risk = xlrd.open_workbook(excel_path_0)
         sheet = risk.sheet_by_index(0)
         RiskValue = sheet.col_values(0)
-        del RiskValue[0]  # 去掉开头的字符
-        # s = np.sum(RiskValue, axis=0)
-
-        dist_matrix_1 = dist_matrx_1()  # 计算候选点间距离矩阵，其中元素为某候选点到其余所有候选点间距离构成的列表
-        dist_matrix_3 = dist_matrx_3()  # 计算候选点与社区间距离矩阵，其中元素为某候选点到所有社区点的距离构成的列表
+        del RiskValue[0]  # delete initial text heading
+        
+        ''' Compute distance matrix of potential location points, where elements in the matrix are distances from one potential location point 
+            to all the rest potential location points'''
+        dist_matrix_1 = dist_matrx_1()  
+        
+        ''' Compute distance matrix of potential location points and community points, where elements in the matrix are distances from one potential 
+            location point to all the community points'''
+        dist_matrix_3 = dist_matrx_3()  
+        
         Index = rand_num  # 每个元素即是当前个体的建站方案
-
 
         overall_list_0 = []
         code_list_0 = []
@@ -70,26 +74,26 @@ class MyProblem(ea.Problem):
             for j in range(len(dist_matrix_3[0])):
                 if dist_matrix_3[i][j] <= R:
                     index_0.append(j)
-                    code_idx.append(1)  # 1: 在候选点的R范围之内; 0: 反之
+                    code_idx.append(1)  # 1: within the service area of potential location points, 0: the otherwise;
                 else:
                     code_idx.append(0)
-            overall_list_0.append(index_0)  # overall_list_0中的元素为某候选点R范围内的社区点索引值
-            code_list_0.append(code_idx)  # code_list中的元素为由overall_list中索引值对应构成的0-1列表
+            overall_list_0.append(index_0)  # elements in overall_list_0 are indexes of communities within the service area of potential location points;
+            code_list_0.append(code_idx)  # elements in code_list are 0-1 list constructed from indexes in overall_list;
 
         f1 = [0]*300
-        for i in range(len(Vars)):  # Index中每个元素即是当前个体的建站方案
-            New_list_0 = []  # 找出Index[i]对应于overall_list中的元素
+        for i in range(len(Vars)):  # elements in Index are the current location siting plan
+            New_list_0 = []  # find all elements from overall_list based on Index[i]
 
             for j in range(len(Index[i])):
                 New_list_0.append(overall_list_0[Index[i][j]])
 
-            '''将New_list_0中社区点索引值合并去掉重复值'''
+            '''Merge indexes of community points from New_list_0 and delete repeating values'''
             New_list_1 = []
             for k in range(len(New_list_0)):
                 New_list_1 += New_list_0[k]
-            New_list_1 = np.unique(New_list_1).tolist()  # 得到所有在被选中社区R范围的候选点索引值
+            New_list_1 = np.unique(New_list_1).tolist()  # obtain indexes of potential location points within the service area of chosen communities
 
-            '''New_list_1中元素与RiskValue中值对应然后求和'''
+            '''Compute sum of risk value from elements in New_list_1 and RiskValue'''
             Sum_value = 0
             for k in range(len(New_list_1)):
                 Sum_value = Sum_value + RiskValue[New_list_1[k]]
@@ -97,15 +101,14 @@ class MyProblem(ea.Problem):
 
         f1 = np.array(f1)
 
-        """===============主循环: 找出所有不可行个体在种群中的索引值============="""
+        """===============Main loop: find all indexes of infeasible individuals in populations============="""
 
-        exIdx = []  # 不可行个体索引值列表
-        # code_list_0 = list(map(list, zip(*code_list_0))), 将code_list_0转置
+        exIdx = []  # index list of infeasible individuals
 
-        for i in range(len(Vars)):  # 当前个体: Vars[i]
-            adj_list = []  # 存储p个站点距离近邻站点的距离的列表
+        for i in range(len(Vars)):  # current individual: Vars[i]
+            adj_list = []  # list containing distances among p potential location points and their adjacent potential location points
             for f in range(len(rand_num[i])):
-                adj_build = []  # 对于某一个站点，存储剩余p-1个站点到该站点的距离
+                adj_build = []  # for certain potential location point, store the distances among the rest p-1 potential location points and the certain potential location point
                 for g in range(len(rand_num[i])):
                     if g == f:
                         continue
@@ -113,20 +116,17 @@ class MyProblem(ea.Problem):
                         adj_build.append(dist_matrix_1[rand_num[i][f]][rand_num[i][g]])
                 adj_list.append(min(adj_build))
 
-            max_dist = max(adj_list)  # 与每一个站点相邻的站点的距离，p者取最大
-            min_dist = min(adj_list)  # 与每一个站点相邻的站点的距离，p者取最小
+            max_dist = max(adj_list) 
+            min_dist = min(adj_list)  
 
             if max_dist <= d_l and min_dist >= d_s:
-                # print(rand_num[i])
                 continue
             else:
                 exIdx.append(i)
 
-        print(len(exIdx))  # 循环到最后若len(exIdx)==200, 则说明种群没有可行个体
-
-        """============================应用可行性法则处理约束条件==================================="""
-        pop.ObjV = np.vstack(f1)  # ObjV是类型为np.array的列向量
+        """============================Apply feasibility rule to handle constraints==================================="""
+        pop.ObjV = np.vstack(f1)  # type of ObjV: np.array
         pop.CV = np.zeros((pop.sizes, 1))
-        pop.CV[exIdx] = 1  # 把求得的违反约束程度矩阵赋值给种群pop的CV
+        pop.CV[exIdx] = 1  
 
         # We do not use penalty function method becasue it is hard to set values for the relative parameeters;
