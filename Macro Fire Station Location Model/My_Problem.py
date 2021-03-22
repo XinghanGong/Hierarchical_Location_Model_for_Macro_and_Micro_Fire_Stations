@@ -2,14 +2,8 @@
 import numpy as np
 import random
 import geatpy as ea
-import itertools
 import xlrd
-import copy
-from MCLP_Macro.DistMatrix_0 import *
 from MCLP_Macro.DistMatrix_1 import *
-from MCLP_Macro.DistMatrix_2 import *
-from geopy.distance import geodesic
-from MCLP_Macro.Read_Excel import excel_read
 from MCLP_Macro.Read_txtfile import *
 from MCLP_Macro.DistMatrix_3 import *
 
