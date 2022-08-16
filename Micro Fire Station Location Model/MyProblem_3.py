@@ -206,40 +206,10 @@ class MyProblem(ea.Problem):  # 继承Problem父类
             if deter_value > s:
                 exIdx_1.append(i)
                 continue
-
-        """
-        '''第三个约束: 小型站间距离约束'''
-        exIdx_2 = []
-        for i in range(len(Index)):  # 当前个体Vars[i]
-            adj_list = []  # 存储p个站点距离近邻站点的距离的列表
-            for f in range(len(Index[i])):
-                adj_build = []  # 对于某一个站点，存储剩余p-1个站点到该站点的距离
-                for g in range(len(Index[i])):
-                    if g == f:
-                        continue
-                    else:
-                        adj_build.append(dist_matrix_2[Index[i][f]][Index[i][g]])
-                adj_list.append(min(adj_build))
-
-            max_dist = max(adj_list)  # 与每一个站点相邻的站点的距离，p者取最大
-            min_dist = min(adj_list)  # 与每一个站点相邻的站点的距离，p者取最小
-
-            if d_s <= min_dist:
-                continue
-            else:
-                exIdx_2.append(i)
-        """
+        
         '''汇总不可行个体的索引值'''
         exIdx_all = list(np.unique(exIdx_0))  #  + exIdx_2+ exIdx_1
-
-        # 罚函数方法: 不推荐，因为难以确定相关参量数值；
-        # alpha =0.2  # 惩罚缩放因子
-        # beta = 0.1  # 惩罚最小偏移量
-        # f1[exIdx] = f1[exIdx] + self.maxormins[0] * alpha * (np.max(f1) - np.min(f1) + beta)
-
-        # 自定义惩罚方法:
-        # f1[exIdx] = f1[exIdx]-0.05  #- np.min(f1)
-        print(1)
+        
         """============================应用可行性法则处理约束条件==================================="""
         pop.ObjV = np.vstack([f1, f2, f3]).T  # ObjV是类型为np.array的列向量
         pop.CV = np.zeros((pop.sizes, 1))
