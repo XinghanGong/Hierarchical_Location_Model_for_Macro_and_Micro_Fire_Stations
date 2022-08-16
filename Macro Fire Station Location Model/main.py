@@ -25,10 +25,10 @@ if __name__ == '__main__':
     myAlgorithm.logTras = 1  # record diary every logTras generation; 0: do not record information;
     myAlgorithm.verbose = True  # setting about wether output diary information
     myAlgorithm.drawing = 1  # set drawing method(0: do not draw anything, 1: draw final graphical graph, 2: dynamic graph of objective space, 3: dynamic graph of decision space)
-    """==========================调用算法模板进行种群进化========================"""
+    """==========================Population Evolution Process========================"""
     [BestIndi, population] = myAlgorithm.run()  # run the algorithm template
     BestIndi.save()  # store information of the best individual
-    """=================================输出结果=============================="""
+    """=================================Output Results=============================="""
     print('Number of evaluation: %s' % myAlgorithm.evalsNum)
     print('Time %s s' % myAlgorithm.passTime)
 
