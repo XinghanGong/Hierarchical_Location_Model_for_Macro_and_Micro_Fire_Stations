@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import geatpy as ea
 from Trans_result import *
-from MyProblem_Micro import *  # Import self-defined model
+from MyProblem_micro import *  # Import self-defined model
 
 if __name__ == '__main__':
     problem = MyProblem()
