@@ -1,1 +1,1 @@
-To solve the micro fire station locatio model, we fisrt defined the objectives function and constrains in the file **MyProblem_micro.py**, where the workload upper limit value was obtained from **Compute_Workload.py**, then invoked the NSGA-II tempate in the file **Main_micro.py**.
+To solve the micro fire station locatio model, we fisrt defined the objective functions and constrains in the file **MyProblem_micro.py**, where the workload upper limit value was obtained from **Compute_Workload.py**, then invoked the NSGA-II tempate in the file **Main_micro.py**.
